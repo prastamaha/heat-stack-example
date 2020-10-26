@@ -1,0 +1,117 @@
+heat_template_version: 2015-04-30
+
+description: Testing HEAT on BRI Environment
+
+parameters:
+  demo_net_name:
+    type: string
+    description: Name for demo network
+  demo_net_cidr:
+    type: string
+    description: CIDR for demo network
+  demo_net_gateway:
+    type: string
+    description: gateway for demo network
+  demo_net_pool_start:
+    type: string
+    description: network pool start. typically .10 of whatever /24 is defined
+  demo_net_pool_end:
+    type: string
+    description: network pool end. typically .100 of whatever /24 is defined
+  demo_ext_net_name:
+    type: string
+    description: external net name. use neutron net-list to figure it out.
+  demo_sg_name:
+    type: string
+    description: Security Group Name.
+  demo_key_name:
+    type: string
+    description: ssh key required for server creation
+  demo_public_key:
+    type: string
+    description: public key from keypair creation
+  demo_image_name:
+    type: string
+    description: image to use to for the server
+  demo_flavor_name:
+    type: string
+    description: openstack server flavor name use openstack flavor list to see options
+  demo_server1_name:
+    type: string
+    description: name of the first server created.
+
+resources:
+  demo_net:
+    type: OS::Neutron::Net
+    properties:
+      name: { get_param: demo_net_name }
+
+  demo_subnet:
+    type: OS::Neutron::Subnet
+    properties:
+      network_id: { get_resource: demo_net }
+      cidr: { get_param: demo_net_cidr }
+      gateway_ip: { get_param: demo_net_gateway }
+      allocation_pools:
+        - start: { get_param: demo_net_pool_start }
+          end: { get_param: demo_net_pool_end }
+
+  demo_router:
+    type: OS::Neutron::Router
+    properties:
+      external_gateway_info:
+        network: { get_param: demo_ext_net_name }
+
+  router_interface:
+    type: OS::Neutron::RouterInterface
+    properties:
+      router_id: { get_resource: demo_router }
+      subnet_id: { get_resource: demo_subnet }
+
+  demo_secgroup:
+    type: OS::Neutron::SecurityGroup
+    properties:
+      name: { get_param: demo_sg_name }
+      rules:
+        - protocol: icmp
+        - protocol: tcp
+          port_range_min: 22
+          port_range_max: 22
+
+  demo_key:
+    type: OS::Nova::KeyPair
+    properties:
+      name: { get_param: demo_key_name }
+      public_key: { get_param: demo_public_key }
+
+  demo_flavor:
+    type: OS::Nova::Flavor
+    properties:
+      name: { get_param: demo_flavor_name }
+      ram: 1024
+      vcpus: 2
+
+  server1:
+    type: OS::Nova::Server
+    properties:
+      name: { get_param: demo_server1_name }
+      image: { get_param: demo_image_name }
+      flavor: { get_resource: demo_flavor }
+      key_name:  { get_resource: demo_key }
+      networks:
+        - port: { get_resource: server1_port }
+
+  server1_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_resource: demo_net }
+      security_groups:
+        - { get_resource: demo_secgroup }
+      fixed_ips:
+        - subnet_id: { get_resource: demo_subnet }
+
+  server1_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network: { get_param: demo_ext_net_name }
+      port_id: { get_resource: server1_port }
