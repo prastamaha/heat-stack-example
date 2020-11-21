@@ -1,13 +1,14 @@
 parameters:
- demo_net_name: dev-internal
+ demo_net_name: net-internal
  demo_net_cidr: 192.168.100.0/24
  demo_net_gateway: 192.168.100.1
  demo_net_pool_start: 192.168.100.2
  demo_net_pool_end: 192.168.100.254
- demo_ext_net_name: Dev_Network
- demo_sg_name: remote-sg 
- demo_key_name: demo-key-heat
- demo_public_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDEOLdUOmmksZAdtfi3LHHljII/9VrwRV5UGfoqxOk45DwBTybwDMF8A44bLtzMbvmXK5KtBulNocOiCXCjY5uUjdaNili6h8Rgl8PPM5p/Ai2Pz/cO6LDvcxm/gMcYXzdO/9m3Yx5QBO3Y0gMw+noDd7PDcpRx/llvflHA8rxtlrAYpan0M8JIo4MFoGlHnsSSiUTznQhtGyD+u4pKHSkakW782SiIw4RO7xIMMJkEB7CajnPJDWv000K4iB9XAZuI55tEqGpQbSaZq7sZSkxip7hkm6OIRrlD1x8t1frqX1QcSCk1SNuvcTy6TPwn3XG3yBj/z16EEUvRRB/eGotPLUmVaOSct3sN7IEZvBPUy+bx6PAkWl4R4i+uyAa/yMagJcCKfzjpq+lSCae9Kw84Spec3ISgzTA0mD62hXxs3rEMq1p6w+DlRiWd45dstHzzzUamOAyqImQbSmpCR98k2RRd8LJzJfIB2h4dgvsK95Q5MAmMZPUPGDcHE6+yWEs= ops@bri-vpc-impl-2"
- demo_image_name: bionic-cloudimg-amd64 
- demo_flavor_name: flavor-demo-heat 
- demo_server1_name: instance-heat
+ demo_subnet_name: subnet-internal
+ demo_ext_net_name: <external-network-name>
+ demo_sg_name: heat-sg
+ demo_key_name: heat-key
+ demo_public_key: <your-ssh-key>
+ demo_image_name: <image-name>
+ demo_flavor_name: heat-flavor
+ demo_server1_name: heat-instance

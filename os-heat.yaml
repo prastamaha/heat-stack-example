@@ -1,6 +1,6 @@
 heat_template_version: 2015-04-30
 
-description: Heat create resource
+description: Heat create an instance
 
 parameters:
   demo_net_name:
@@ -18,12 +18,18 @@ parameters:
   demo_net_pool_end:
     type: string
     description: network pool end. typically .100 of whatever /24 is defined
+  demo_subnet_name
+    type: string
+    description: Name for demo subnet
   demo_ext_net_name:
     type: string
     description: external net name. use neutron net-list to figure it out.
   demo_sg_name:
     type: string
     description: Security Group Name.
+  demo_router_name
+    type: string  
+    description: Name for Router
   demo_key_name:
     type: string
     description: ssh key required for server creation
@@ -49,6 +55,7 @@ resources:
   demo_subnet:
     type: OS::Neutron::Subnet
     properties:
+      name: { get_param: demo_subnet_name }
       network_id: { get_resource: demo_net }
       cidr: { get_param: demo_net_cidr }
       gateway_ip: { get_param: demo_net_gateway }
@@ -59,6 +66,7 @@ resources:
   demo_router:
     type: OS::Neutron::Router
     properties:
+      name: { get_param: demo_router_name }
       external_gateway_info:
         network: { get_param: demo_ext_net_name }
 
