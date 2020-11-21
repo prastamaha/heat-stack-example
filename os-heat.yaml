@@ -1,6 +1,6 @@
 heat_template_version: 2015-04-30
 
-description: Testing HEAT on BRI Environment
+description: Heat create resource
 
 parameters:
   demo_net_name:
@@ -90,6 +90,7 @@ resources:
       name: { get_param: demo_flavor_name }
       ram: 1024
       vcpus: 2
+      disk: 8
 
   server1:
     type: OS::Nova::Server
