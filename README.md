@@ -7,7 +7,6 @@ the purpose of this template is to create the following openstack components
 - Security Group
 - Key Pair
 - Flavor
-- Image
 - Instance
 - Attach Floatin ip to Instance
 
